@@ -65,8 +65,13 @@ class Pais  {
       estaSobRato = true;
       
       if (mousePressed) {    // se houver click na area da bola, guardamos ref do pais (nome) e alteramos seccao
-        seccaogeral = 2;
+        
+        println("rato");
         paiseSeleccionado = nome;
+        seccaogeral = 2;
+        
+        
+        
       }
     }
 
