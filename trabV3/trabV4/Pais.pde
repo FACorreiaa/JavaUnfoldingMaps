@@ -69,6 +69,7 @@ class Pais {
       //println("rato");
 
       paisCandidato = nome;
+      //seccaogeral = 2;
     }
 
 
@@ -96,4 +97,5 @@ class Pais {
   void desenhaEdu(int x, int y) {
     text(nome+"\n", x+150, y+150);
   }
+ 
 }
