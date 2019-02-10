@@ -51,6 +51,22 @@ class Pais {
     secondaryFemaleValue = sfv;
     tertiaryFemaleValue = tfv;
   }
+  void desenhaMapa() {
+    Location loc = new Location(lat, lon);
+    ScreenPosition pos = map.getScreenPosition(loc);
+    float malValuesMasc = primaryMaleValue + secondaryMaleValue + tertiaryMaleValue;
+    float mapSalMasc = map(malValuesMasc, 0, 5000, 0, 100);
+
+
+    float malValuesFem = primaryFemaleValue + secondaryFemaleValue + tertiaryFemaleValue;
+    float mapSalFem = map(malValuesFem, 0, 5000, 0, 100);
+    //noStroke();
+    // circulo de salario
+    fill(100, 140, 114, 100);
+    ellipse (pos.x, pos.y, mapSalMasc, mapSalMasc); 
+    fill(0, 140, 114,100);
+    ellipse (pos.x, pos.y, mapSalFem, mapSalFem);
+  }
 
   void desenhaInfo() {
     Location localizacaoMapa = new Location(lat, lon);
@@ -97,5 +113,4 @@ class Pais {
   void desenhaEdu(int x, int y) {
     text(nome+"\n", x+150, y+150);
   }
- 
 }

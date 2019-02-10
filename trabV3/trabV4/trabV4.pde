@@ -11,11 +11,15 @@ import de.fhpotsdam.unfolding.utils.*;
 import java.util.*;
 
 UnfoldingMap map;
+SimplePointMarker maleMarker, femaleMarker;
 
 boolean mouseMoved = false;
 import java.util.Map;    // importar os hashmaps do JAVA
 import java.util.*;
 import java.io.*;
+import controlP5.*;
+
+ControlP5 cp5;
 
 //lista dos varios icones
 List countryMarkers = new ArrayList();
@@ -34,10 +38,6 @@ String paisCandidato="";
 boolean iniciouDrag = false;
 int x = 50; //dados para divisão por sexo
 int y = 50;
-import controlP5.*;
-ControlP5 cp5;
-Textfield targetField;
-//Pais pais = paises.get(paiseSeleccionado);
 
 
 public void setup() {
@@ -110,7 +110,24 @@ public void setup() {
     // Add markers to the map
     ImageMarker imgMarker = new ImageMarker(mapMarker, iconBandeira);
     map.addMarkers(imgMarker);
-    //for (Map.Entry p : paises.entrySet() ) {    // percorremos o hashmap dos paises     
+
+    Location ellipseMarker = new Location(lat, lon);
+    maleMarker = new SimplePointMarker(ellipseMarker);
+    femaleMarker = new SimplePointMarker(ellipseMarker);
+
+
+    float malValuesMasc = primaryMaleValue + secondaryMaleValue + tertiaryMaleValue;
+    float mapSalMasc = map(malValuesMasc, 0, 10000, 0, 100);
+
+
+    float malValuesFem = primaryFemaleValue + secondaryFemaleValue + tertiaryFemaleValue;
+    float mapSalFem = map(malValuesFem, 0, 10000, 0, 100);
+    //noStroke();
+    // circulo de salario
+    fill(150, 20, 10, 100);
+    ellipse (lat, lon, mapSalMasc, mapSalMasc); 
+    fill(100, 20, 10, 100);
+    ellipse (lat, lon, mapSalFem, mapSalFem);    //for (Map.Entry p : paises.entrySet() ) {    // percorremos o hashmap dos paises     
     //  Pais pais = (Pais) p.getValue();
     //  pais.desenhaInfo();
     //  pais.desenhaRato();
@@ -158,11 +175,20 @@ public void draw() {
   case 1:
 
     map.draw();
+
+
     paisCandidato="";
     for (Map.Entry p : paises.entrySet() ) {    // percorremos o hashmap dos paises     
       Pais pais = (Pais) p.getValue();
       pais.desenhaInfo();
       pais.desenhaRato();
+      pais.desenhaMapa();
+      //Location loc = new Location(pais.lat, pais.lon);
+      //ScreenPosition pos = map.getScreenPosition(loc);
+      //strokeWeight(16);
+      //stroke(67, 211, 227, 100);
+      //noFill();
+      //ellipse(pos.x, pos.y, 20, 20);
     }
 
 
@@ -719,6 +745,7 @@ public void draw() {
     break;
 
   case 8:
+
     background(240);
     textFont(regular);
     buttonClick();
@@ -731,9 +758,9 @@ public void draw() {
     image(countryFilter.iconBandeira, width/2+80, 150);
     text("Filtro", width/2, 200);
     textSize(12);
-    
-    
-    
+
+
+
     break;
   }
 }
