@@ -29,7 +29,7 @@ HashMap<String, Pais> paises = new HashMap<String, Pais>();
 
 int numeroPaises = 0;
 Button inicio, dataDescr, dataSexMascGraph, dataSexFemGraph, 
-  dataSexGeneral, dataStatistics, dataVertical, dataFilter, dataInit, dataMap, infoPais;
+  dataSexGeneral, dataStatistics, dataVertical, dataFilter, dataInit, dataMap, infoPais, exit;
 PFont semiBoldItalic, semiBold, regular, lightItalic, light, 
   italic, extraBoldItalic, extraBold, boldItalic, bold;
 int seccaogeral = 0;
@@ -65,7 +65,8 @@ public void setup() {
   dataStatistics = new Button(570, 73, 130, 30, 12, "Estatisticas");
   dataVertical = new Button(710, 73, 130, 30, 12, "Areas");
   dataFilter = new Button(850, 73, 130, 30, 12, "Filtro");
-  dataMap = new Button(width/2, 0, 130, 30, 12, "Mapa");
+  dataMap = new Button(0, 0, 130, 30, 12, "Mapa");
+  exit = new Button(1270, 0, 130, 30, 12, "Sair");
   //infoPais = new Button(850, 73, 130, 30, 12, "Mapa");
 
 
@@ -322,6 +323,10 @@ public void draw() {
      //primeiro ecra após escolher o pais */
     break;
   case 3:
+  PImage masc;
+      masc = loadImage("masc2.png");
+      masc.resize(16,16);
+   
     Pais countrySexMasc = paises.get(paiseSeleccionado);
 
     textFont(regular);
@@ -332,6 +337,7 @@ public void draw() {
     text(countrySexMasc.nome, width/2, 160);
     image(countrySexMasc.iconBandeira, width/2+80, 150);
     text("Dados por sexo masculino", 70, 160);
+    image(masc, 280, 145);
 
 
     textFont(regular);
@@ -409,7 +415,9 @@ public void draw() {
 
   case 4:
     Pais countrySexFem = paises.get(paiseSeleccionado);
-
+    PImage fem;
+     fem = loadImage("fem.png");
+    fem.resize(16,16);
     float maximo = 0;
     textFont(regular);
     buttonClick();
@@ -419,6 +427,7 @@ public void draw() {
     text(countrySexFem.nome, width/2, 160);
     image(countrySexFem.iconBandeira, width/2+80, 150);
     text("Dados por sexo feminino", 70, 160);
+    image(fem, 280, 145);
     text("(thousands)", 280, 250);
     textSize(12);
 
@@ -758,9 +767,11 @@ public void draw() {
     image(countryFilter.iconBandeira, width/2+80, 150);
     text("Filtro", width/2, 200);
     textSize(12);
-
-
-
+    
+    break;
+    
+    case 9:
+      exit();
     break;
   }
 }
@@ -780,6 +791,8 @@ void buttonClick() {
   dataVertical.update();
   if (dataFilter.clicked) seccaogeral = 8;
   dataFilter.update();
+  if(exit.clicked) seccaogeral = 9;
+  exit.update();
 }
 
 void mouseDragged() {

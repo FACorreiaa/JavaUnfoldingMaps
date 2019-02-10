@@ -69,6 +69,9 @@ class Pais {
   }
 
   void desenhaInfo() {
+    float malValuesMasc = primaryMaleValue + secondaryMaleValue + tertiaryMaleValue;
+    float malValuesFem = primaryFemaleValue + secondaryFemaleValue + tertiaryFemaleValue;
+
     Location localizacaoMapa = new Location(lat, lon);
 
     ScreenPosition posicaoMapa = map.getScreenPosition(localizacaoMapa);
@@ -96,12 +99,16 @@ class Pais {
     } else {
       noStroke();
     }
-
+    
+    //    fill(100, 140, 114, 100);
+    //    fill(0, 140, 114,100);
+    
     if (estaSobRato) {
       noStroke();
 
       fill(0);
-      text(nome + "\nLat: " + lat + "\nLon: " + lon, mouseX+25, mouseY-5);
+      //text(nome + "\nLat: " + lat + "\nLon: " + lon + "\n" + masc + malValuesMasc + "\n" + fem + malValuesFem, mouseX+25, mouseY-5);
+      text(nome + "\nLat: " + lat + "\nLon: " + lon + "\n Sum M: " + malValuesMasc + "\n Sum F: " + malValuesFem, mouseX+25, mouseY-5);
     }
   }
 
