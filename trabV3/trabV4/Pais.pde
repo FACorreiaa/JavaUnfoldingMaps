@@ -55,16 +55,16 @@ class Pais {
     Location loc = new Location(lat, lon);
     ScreenPosition pos = map.getScreenPosition(loc);
     float malValuesMasc = primaryMaleValue + secondaryMaleValue + tertiaryMaleValue;
-    float mapSalMasc = map(malValuesMasc, 0, 5000, 0, 100);
+    float mapSalMasc = map(malValuesMasc, 0, 5000, 0, 500);
 
 
     float malValuesFem = primaryFemaleValue + secondaryFemaleValue + tertiaryFemaleValue;
-    float mapSalFem = map(malValuesFem, 0, 5000, 0, 100);
+    float mapSalFem = map(malValuesFem, 0, 5000, 0, 500);
     //noStroke();
     // circulo de salario
-    fill(100, 140, 114, 100);
+    fill(0,07,84, 50);
     ellipse (pos.x, pos.y, mapSalMasc, mapSalMasc); 
-    fill(0, 140, 114,100);
+    fill(236,87,113,50);
     ellipse (pos.x, pos.y, mapSalFem, mapSalFem);
   }
 

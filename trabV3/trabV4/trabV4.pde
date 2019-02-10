@@ -18,6 +18,11 @@ import java.util.Map;    // importar os hashmaps do JAVA
 import java.util.*;
 import java.io.*;
 import controlP5.*;
+import processing.sound.*;
+SoundFile[] file;
+Textarea myTextareaMale, myTextareaFemale, myTextlabelSum;
+
+int numsounds = 5;
 
 ControlP5 cp5;
 
@@ -29,7 +34,7 @@ HashMap<String, Pais> paises = new HashMap<String, Pais>();
 
 int numeroPaises = 0;
 Button inicio, dataDescr, dataSexMascGraph, dataSexFemGraph, 
-  dataSexGeneral, dataStatistics, dataVertical, dataFilter, dataInit, dataMap, infoPais, exit;
+  dataSexGeneral, dataStatistics, dataVertical, dataFilter, dataInit, dataMap, infoPais, summaryMale, summaryFemale, exit;
 PFont semiBoldItalic, semiBold, regular, lightItalic, light, 
   italic, extraBoldItalic, extraBold, boldItalic, bold;
 int seccaogeral = 0;
@@ -43,6 +48,7 @@ int y = 50;
 public void setup() {
   size(1400, 1080, P2D);
   map = new UnfoldingMap(this);
+  cp5 = new ControlP5(this);
   MapUtils.createDefaultEventDispatcher(this, map);
   map.setTweening(true);
   map.zoomToLevel(4);
@@ -64,8 +70,10 @@ public void setup() {
   dataSexGeneral = new Button(430, 73, 130, 30, 12, "Dados por sexo Geral");
   dataStatistics = new Button(570, 73, 130, 30, 12, "Estatisticas");
   dataVertical = new Button(710, 73, 130, 30, 12, "Areas");
-  dataFilter = new Button(850, 73, 130, 30, 12, "Filtro");
+  dataFilter = new Button(850, 73, 130, 30, 12, "Filter (Male by default)");
   dataMap = new Button(0, 0, 130, 30, 12, "Mapa");
+  summaryMale = new Button(10, 500, 130, 30, 12, "Male");
+  summaryFemale = new Button(10, 600, 130, 30, 12, "Female");
   exit = new Button(1270, 0, 130, 30, 12, "Sair");
   //infoPais = new Button(850, 73, 130, 30, 12, "Mapa");
 
@@ -138,6 +146,11 @@ public void setup() {
     //for (Map.Entry p : paises.entrySet()) {
     //      Pais pais = paises.get(paiseSeleccionado);
     //}
+  }
+
+  file = new SoundFile[numsounds];
+  for (int i = 0; i < numsounds; i++) {
+    file[i] = new SoundFile(this, (i+1) + ".aif");
   }
 }
 
@@ -323,10 +336,10 @@ public void draw() {
      //primeiro ecra após escolher o pais */
     break;
   case 3:
-  PImage masc;
-      masc = loadImage("masc2.png");
-      masc.resize(16,16);
-   
+    PImage masc;
+    masc = loadImage("masc2.png");
+    masc.resize(16, 16);
+
     Pais countrySexMasc = paises.get(paiseSeleccionado);
 
     textFont(regular);
@@ -338,20 +351,23 @@ public void draw() {
     image(countrySexMasc.iconBandeira, width/2+80, 150);
     text("Dados por sexo masculino", 70, 160);
     image(masc, 280, 145);
-
+    float maximo = 0;
 
     textFont(regular);
     text("(thousands)", 280, 250);
     textSize(12);
     fill(40, 50, 60, 200);
+    if (countrySexMasc.primaryMaleValue>maximo) maximo = countrySexMasc.primaryMaleValue;
     text(countrySexMasc.primaryMale, 10, 295);
     fill(40, 50, 60, 200);
+    if (countrySexMasc.secondaryMaleValue>maximo) maximo = countrySexMasc.secondaryMaleValue;
     text(countrySexMasc.secondaryMale, 10, 395);
     fill(40, 50, 60, 200);
+    if (countrySexMasc.tertiaryMaleValue>maximo) maximo = countrySexMasc.tertiaryMaleValue;
     text(countrySexMasc.tertiaryMale, 10, 495);
 
     // salario pais selecionado
-    float m = map(countrySexMasc.primaryMaleValue, 0, width, 0, width);
+    float m = map(countrySexMasc.primaryMaleValue, 0, maximo, 0, width-400);
 
     fill(318, 36, 15, 200);
     rect(280, 280, m, 20, 12);
@@ -359,14 +375,14 @@ public void draw() {
     text(countrySexMasc.primaryMaleValue, 280, 295);
 
     // salario medio
-    float n = map(countrySexMasc.secondaryMaleValue, 0, width, 0, width);
+    float n = map(countrySexMasc.secondaryMaleValue, 0, maximo, 0, width-400);
     fill(331, 67, 25, 150);
     rect(280, 380, n, 20, 12);
     fill(255);
     text(countrySexMasc.secondaryMaleValue, 280, 395);
 
     // salario mais alto
-    float o = map(countrySexMasc.tertiaryMaleValue, 0, width, 0, width);
+    float o = map(countrySexMasc.tertiaryMaleValue, 0, maximo, 0, width-400);
     fill(343, 81, 45, 100);
     rect(280, 480, o+5, 20, 12);
     fill(255);
@@ -416,9 +432,9 @@ public void draw() {
   case 4:
     Pais countrySexFem = paises.get(paiseSeleccionado);
     PImage fem;
-     fem = loadImage("fem.png");
-    fem.resize(16,16);
-    float maximo = 0;
+    fem = loadImage("fem.png");
+    fem.resize(16, 16);
+    float maximoF = 0;
     textFont(regular);
     buttonClick();
     textFont(regular);
@@ -434,18 +450,18 @@ public void draw() {
 
     fill(40, 50, 60, 200);
     text(countrySexFem.primaryFemale, 10, 295);  
-    if (countrySexFem.primaryFemaleValue>maximo) maximo = countrySexFem.primaryFemaleValue;
+    if (countrySexFem.primaryFemaleValue>maximoF) maximoF = countrySexFem.primaryFemaleValue;
     fill(40, 50, 60, 200);
     text(countrySexFem.secondaryFemale, 10, 395); 
-    if (countrySexFem.secondaryFemaleValue>maximo) maximo = countrySexFem.secondaryFemaleValue;
+    if (countrySexFem.secondaryFemaleValue>maximoF) maximoF = countrySexFem.secondaryFemaleValue;
     fill(40, 50, 60, 200);
     text(countrySexFem.tertiaryFemale, 10, 495); 
-    if (countrySexFem.tertiaryFemaleValue>maximo) maximo = countrySexFem.tertiaryFemaleValue;
+    if (countrySexFem.tertiaryFemaleValue>maximoF) maximoF = countrySexFem.tertiaryFemaleValue;
 
 
 
     // salario pais selecionado
-    float q = map(countrySexFem.primaryFemaleValue, 0, maximo, 0, width-400);
+    float q = map(countrySexFem.primaryFemaleValue, 0, maximoF, 0, width-400);
 
     fill(13, 39, 255, 200);
     rect(280, 280, q, 20, 12);
@@ -453,14 +469,14 @@ public void draw() {
     text(countrySexFem.primaryFemaleValue, 280, 295);
 
     // salario medio
-    float r = map(countrySexFem.secondaryFemaleValue, 0, maximo, 0, width-400);
+    float r = map(countrySexFem.secondaryFemaleValue, 0, maximoF, 0, width-400);
     fill(12, 94, 232, 150);
     rect(280, 380, r, 20, 12);
     fill(255);
     text(countrySexFem.secondaryFemaleValue, 280, 395);
 
     // salario mais alto
-    float s = map(countrySexFem.tertiaryFemaleValue, 0, maximo, 0, width-400);
+    float s = map(countrySexFem.tertiaryFemaleValue, 0, maximoF, 0, width-400);
     fill(0, 162, 255, 100);
     rect(280, 480, s, 20, 12);
     fill(255);
@@ -758,20 +774,93 @@ public void draw() {
     background(240);
     textFont(regular);
     buttonClick();
-
+    summary();
     textSize(16);
     fill(0);
-    Pais countryFilter = paises.get(paiseSeleccionado);
+    Pais countrySummaryMale = paises.get(paiseSeleccionado);
+    float sumMale = (countrySummaryMale.primaryMaleValue + countrySummaryMale.primaryMaleValue + countrySummaryMale.secondaryMaleValue);
+    float maxMale = max(countrySummaryMale.primaryMaleValue, countrySummaryMale.primaryMaleValue, countrySummaryMale.secondaryMaleValue);
+    float minMale = min(countrySummaryMale.primaryMaleValue, countrySummaryMale.primaryMaleValue, countrySummaryMale.secondaryMaleValue);
+    float avgMale = (countrySummaryMale.primaryMaleValue + countrySummaryMale.primaryMaleValue + countrySummaryMale.secondaryMaleValue)/3;
 
-    text(countryFilter.nome, width/2, 160);
-    image(countryFilter.iconBandeira, width/2+80, 150);
-    text("Filtro", width/2, 200);
+    text(countrySummaryMale.nome, width/2, 160);
+    image(countrySummaryMale.iconBandeira, width/2+80, 150);
+    text("Sumário", width/2, 200);
     textSize(12);
     
-    break;
     
-    case 9:
-      exit();
+                    
+    myTextareaMale = cp5.addTextarea("txt")
+      .setPosition(width/2, 500)
+      .setSize(400, 200)
+      .setFont(createFont("arial", 12))
+      .setLineHeight(14)
+      .setColor(color(128))
+      .setColorBackground(color(255, 100))
+      .setColorForeground(color(255, 100));
+    ;
+    myTextareaMale.setText(" Pais: " +  paiseSeleccionado + 
+    "\n Latitude: " + countrySummaryMale.lat + "\n Longitude: " + countrySummaryMale.lon +
+    "\n Ensino Primário: " + countrySummaryMale.primaryMaleValue +
+    "\n Ensino secondário: " + countrySummaryMale.secondaryMaleValue +
+    "\n Terceiro Ciclo: " + countrySummaryMale.tertiaryMaleValue +
+    "\n Somatorio valores masculino: " + sumMale + 
+    "\n Maior valor masculino: " + maxMale +
+    "\n Menor valor masculino: " + minMale +
+    "\n Media três ciclos: " + avgMale
+      );
+
+    if (keyPressed && key==' ') {
+      myTextareaMale.scroll((float)mouseX/(float)width);
+    }
+
+    break;
+
+  case 9:
+    background(240);
+    textFont(regular);
+    buttonClick();
+    summary();
+    textSize(16);
+    fill(0);
+    Pais countrySummaryFemale = paises.get(paiseSeleccionado);
+    float sumFemale = (countrySummaryFemale.primaryFemaleValue + countrySummaryFemale.primaryFemaleValue + countrySummaryFemale.secondaryFemaleValue);
+    float maxFemale = max(countrySummaryFemale.primaryFemaleValue, countrySummaryFemale.primaryFemaleValue, countrySummaryFemale.secondaryFemaleValue);
+    float minFemale = min(countrySummaryFemale.primaryFemaleValue, countrySummaryFemale.primaryFemaleValue, countrySummaryFemale.secondaryFemaleValue);
+    float avgFemale = (countrySummaryFemale.primaryFemaleValue + countrySummaryFemale.primaryFemaleValue + countrySummaryFemale.secondaryFemaleValue)/3;
+    text(countrySummaryFemale.nome, width/2, 160);
+    image(countrySummaryFemale.iconBandeira, width/2+80, 150);
+    text("Sumário", width/2, 200);
+    textSize(12);
+    
+    myTextareaFemale = cp5.addTextarea("txt")
+      .setPosition(width/2, 500)
+      .setSize(400, 200)
+      .setFont(createFont("arial", 12))
+      .setLineHeight(14)
+      .setColor(color(128))
+      .setColorBackground(color(255, 100))
+      .setColorForeground(color(255, 100));
+    ;
+    myTextareaFemale.setText(" Pais: " +  paiseSeleccionado + 
+    "\n Latitude: " + countrySummaryFemale.lat + "\n Longitude: " + countrySummaryFemale.lon +
+    "\n Ensino Primário: " + countrySummaryFemale.primaryFemaleValue +
+    "\n Ensino secondário: " + countrySummaryFemale.secondaryFemaleValue +
+    "\n Terceiro Ciclo: " + countrySummaryFemale.tertiaryFemaleValue +
+    "\n Somatorio valores masculino: " + sumFemale + 
+    "\n Maior valor masculino: " + maxFemale +
+    "\n Menor valor masculino: " + minFemale +
+    "\n Media três ciclos: " + avgFemale
+      );
+
+    if (keyPressed && key==' ') {
+      myTextareaFemale.scroll((float)mouseX/(float)width);
+    }
+    
+    break;
+
+  case 10:
+    exit();
     break;
   }
 }
@@ -791,20 +880,40 @@ void buttonClick() {
   dataVertical.update();
   if (dataFilter.clicked) seccaogeral = 8;
   dataFilter.update();
-  if(exit.clicked) seccaogeral = 9;
+  if (exit.clicked) seccaogeral = 9;
   exit.update();
 }
 
+void summary() {
+  summaryMale.update(); 
+  if (summaryMale.clicked) seccaogeral = 8;
+  summaryFemale.update(); 
+  if (summaryFemale.clicked) seccaogeral = 9;
+}
+
 void mouseDragged() {
+  file[0].play(4.0, 1.0);
   if (seccaogeral==1) {
     iniciouDrag = true;
   }
 }
 
 void mouseReleased() {
+  file[1].play(4.0, 1.0);
   if (seccaogeral==1 && !paisCandidato.equals("") && !iniciouDrag) {
     paiseSeleccionado = paisCandidato;
     seccaogeral = 2;
   }
   iniciouDrag=false;
+}
+
+void mousePressed() {
+  file[0].play(3.0, 1.0);
+}
+
+void keyPressed() {
+  if (key=='c') {
+    myTextareaMale.setColor(0xffffffff);
+    myTextareaFemale.setColor(0xffffffff);
+  }
 }
