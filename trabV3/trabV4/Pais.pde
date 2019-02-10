@@ -23,8 +23,9 @@ class Pais {
   float lat;
   float lon;
   PImage iconBandeira;
+  PImage imagemBandeira;
 
-  Pais (String n, float la, float lo, PImage ic, 
+  Pais (String n, float la, float lo, PImage ic, PImage ib,
     String pf, String sf, String tf, 
     float pfv, float sfv, float tfv, 
     String pm, String sm, String tm, 
@@ -34,6 +35,7 @@ class Pais {
     lat = la;
     lon = lo;
     iconBandeira = ic;
+    imagemBandeira = ib;
 
     primaryMale = pm;
     secondaryMale = sm;

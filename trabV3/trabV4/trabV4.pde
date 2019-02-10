@@ -1,6 +1,5 @@
 /*
 TRABALHO DI
- cp5 chart, canvas, menuList
  */
 
 import de.fhpotsdam.unfolding.*;
@@ -75,16 +74,10 @@ public void setup() {
   summaryMale = new Button(10, 500, 130, 30, 12, "Male");
   summaryFemale = new Button(10, 600, 130, 30, 12, "Female");
   exit = new Button(1270, 0, 130, 30, 12, "Sair");
-  //infoPais = new Button(850, 73, 130, 30, 12, "Mapa");
-
-
-
-
 
   String[] linhas = loadStrings("teste.csv");  // vamos ler o ficheiro de texto e guardar num array de Strings (cada indice tem uma linha do texto)
 
   numeroPaises = linhas.length; // quantas linhas temos
-  //println(numeroPaises);
 
   for (int i=0; i<numeroPaises; i++) { // percorremos as linhas
 
@@ -110,10 +103,15 @@ public void setup() {
     float lon = parseInt(elementos[21]); // obtemos a LONGITUDE GPS
 
     PImage iconBandeira;
+    PImage imagemBandeira;
     iconBandeira = loadImage(elementos[22]);
     iconBandeira.resize(12, 12);
+    
+    imagemBandeira = loadImage(elementos[23]);
+    imagemBandeira.resize(500, 281);
 
-    Pais P = new Pais(nome, lat, lon, iconBandeira, primaryMale, secondaryMale, tertiaryMale, primaryMaleValue, secondaryMaleValue, tertiaryMaleValue, primaryFemale, secondaryFemale, tertiaryFemale, primaryFemaleValue, secondaryFemaleValue, tertiaryFemaleValue);
+
+    Pais P = new Pais(nome, lat, lon, iconBandeira, imagemBandeira, primaryMale, secondaryMale, tertiaryMale, primaryMaleValue, secondaryMaleValue, tertiaryMaleValue, primaryFemale, secondaryFemale, tertiaryFemale, primaryFemaleValue, secondaryFemaleValue, tertiaryFemaleValue);
 
     Location mapMarker = new Location(lat, lon);
     // Add markers to the map
@@ -131,21 +129,13 @@ public void setup() {
 
     float malValuesFem = primaryFemaleValue + secondaryFemaleValue + tertiaryFemaleValue;
     float mapSalFem = map(malValuesFem, 0, 10000, 0, 100);
-    //noStroke();
-    // circulo de salario
+
     fill(150, 20, 10, 100);
     ellipse (lat, lon, mapSalMasc, mapSalMasc); 
     fill(100, 20, 10, 100);
     ellipse (lat, lon, mapSalFem, mapSalFem);    //for (Map.Entry p : paises.entrySet() ) {    // percorremos o hashmap dos paises     
-    //  Pais pais = (Pais) p.getValue();
-    //  pais.desenhaInfo();
-    //  pais.desenhaRato();
-    //}
 
     paises.put(nome, P);
-    //for (Map.Entry p : paises.entrySet()) {
-    //      Pais pais = paises.get(paiseSeleccionado);
-    //}
   }
 
   file = new SoundFile[numsounds];
@@ -158,7 +148,6 @@ public void setup() {
 
 public void draw() {
   background(240);
-  //println(seccaogeral);
 
   switch(seccaogeral) {
   case 0:
@@ -167,7 +156,6 @@ public void draw() {
     ipca = loadImage("ipca-logo-web.jpg");
     ipca.resize(400, 225);
     image(ipca, 500, 160);
-    //Pais p = paises.get(paiseSeleccionado);
 
     textSize(12);
     fill(50);
@@ -197,27 +185,7 @@ public void draw() {
       pais.desenhaInfo();
       pais.desenhaRato();
       pais.desenhaMapa();
-      //Location loc = new Location(pais.lat, pais.lon);
-      //ScreenPosition pos = map.getScreenPosition(loc);
-      //strokeWeight(16);
-      //stroke(67, 211, 227, 100);
-      //noFill();
-      //ellipse(pos.x, pos.y, 20, 20);
     }
-
-
-    //println(paisCandidato);
-
-
-    // map.draw();    // desenha o mapa interactivo
-    // //// Create point markers for locations
-
-
-    // background(240);
-    // textSize(16);
-
-
-
     break;
 
   case 2:
@@ -226,6 +194,8 @@ public void draw() {
     textFont(regular);
     buttonClick();
     dataMap.update();
+    maleSummary.update();
+    femaleSummary();
     if (dataMap.clicked) seccaogeral = 1;
     Pais pais = paises.get(paiseSeleccionado);
     textSize(16);
@@ -233,107 +203,9 @@ public void draw() {
     fill(0);
     text(pais.nome, width/2, 140);
     image(pais.iconBandeira, width/2+80, 130);
-    println(paiseSeleccionado);
-
-
-    /*text(pais.nome, 50, 50);
-     PFont mono;
-     
-     mono = createFont("OpenSans-Regular.ttf", 12);
-     
-     textFont(mono);
-     
-     background(240);
-     ipca = loadImage("ipca-logo-web.jpg");
-     ipca.resize(400, 225);
-     image(ipca, 500, 160);
-     //Pais p = paises.get(paiseSeleccionado);
-     
-     textSize(12);
-     fill(50);
-     textFont(semiBoldItalic);
-     text("Informação do trabalho", 70, 160);
-     text(pais.nome, 70, 184);
-     textFont(lightItalic);
-     text("Desenho Interfaces Aplicacionais", 500, 510);
-     text("MEI (Pós-Laboral), DIA", 500, 530);
-     text("Trabalho elaborado por:", 500, 550);
-     text("Fernando Correia Nº a11199", 500, 570);
-     // textSize(16);
-     
-     // text("Dados por sexo masculino", 70, 160);
-     
-     // float maximo = 0;
-     
-     // //Pais paisF = paises.get(paiseSeleccionado);
-     
-     // textFont(regular);
-     // text("(thousands)", 280, 250);
-     // textSize(12);
-     // fill(40, 50, 60, 200);
-     // text(pais.primaryFemale, 10, 295);  if (pais.primaryFemaleValue>maximo) maximo = pais.primaryFemaleValue;
-     // fill(40, 50, 60, 200);
-     // text(pais.secondaryFemale, 10, 395); if (pais.secondaryFemaleValue>maximo) maximo = pais.secondaryFemaleValue;
-     // fill(40, 50, 60, 200);
-     // text(pais.tertiaryFemale, 10, 495); if (pais.tertiaryFemaleValue>maximo) maximo = pais.tertiaryFemaleValue;
-     
-     
-     
-     //  // salario pais selecionado
-     //float q = map(pais.primaryFemaleValue, 0, maximo, 0, width-400);
-     
-     //fill(13,39,255,200);
-     //rect(280, 280, q, 20, 12);
-     //fill(255);
-     //text(pais.primaryFemaleValue, 280, 295);
-     
-     //// salario medio
-     //float r = map(pais.secondaryFemaleValue, 0, maximo, 0, width-400);
-     //fill(12,94,232,150);
-     //rect(280, 380, r, 20, 12);
-     //fill(255);
-     //text(pais.secondaryFemaleValue, 280, 395);
-     
-     //// salario mais alto
-     //float s = map(pais.tertiaryFemaleValue, 0, maximo, 0, width-400);
-     //fill(0,162,255,100);
-     //rect(280, 480, s, 20, 12);
-     //fill(255);
-     //text(pais.tertiaryFemaleValue, 280, 495);
-     
-     //fill(13,39,255,200);
-     //rect(100, 650, 20, 20, 12);
-     //fill(12,94,232,150);
-     //rect(100, 700, 20, 20, 12);
-     //fill(0,162,255,100);
-     //rect(100, 750, 20, 20, 12);
-     
-     //fill(40, 50, 60, 200);
-     // noStroke();
-     // text(pais.primaryFemale, 200, 660);
-     // fill(40, 50, 60, 200);
-     // text(pais.secondaryFemale, 200, 710);
-     // fill(40, 50, 60, 200);
-     // text(pais.tertiaryFemale, 200, 760);
-     
-     
-     
-     textFont(regular);
-     
-     inicio.update();
-     
-     if (inicio.clicked) seccaogeral = 0;
-     
-     dataSexMascGraph.update();
-     dataSexFemGraph.update();
-     dataStatistics.update();
-     dataSexGeneral.update();
-     dataVertical.update();
-     dataFilter.update();
-     
-     break;
-     
-     //primeiro ecra após escolher o pais */
+    
+    image(pais.imagemBandeira, width/2-281, height/2);
+    
     break;
   case 3:
     PImage masc;
@@ -366,7 +238,6 @@ public void draw() {
     if (countrySexMasc.tertiaryMaleValue>maximo) maximo = countrySexMasc.tertiaryMaleValue;
     text(countrySexMasc.tertiaryMale, 10, 495);
 
-    // salario pais selecionado
     float m = map(countrySexMasc.primaryMaleValue, 0, maximo, 0, width-400);
 
     fill(318, 36, 15, 200);
@@ -374,14 +245,12 @@ public void draw() {
     fill(255);
     text(countrySexMasc.primaryMaleValue, 280, 295);
 
-    // salario medio
     float n = map(countrySexMasc.secondaryMaleValue, 0, maximo, 0, width-400);
     fill(331, 67, 25, 150);
     rect(280, 380, n, 20, 12);
     fill(255);
     text(countrySexMasc.secondaryMaleValue, 280, 395);
 
-    // salario mais alto
     float o = map(countrySexMasc.tertiaryMaleValue, 0, maximo, 0, width-400);
     fill(343, 81, 45, 100);
     rect(280, 480, o+5, 20, 12);
@@ -402,31 +271,7 @@ public void draw() {
     text(countrySexMasc.secondaryMale, 200, 710);
     fill(40, 50, 60, 200);
     text(countrySexMasc.tertiaryMale, 200, 760);
-    //String[] fontList = PFont.list();
-    //println(fontList);
-    //PFont mono;
-
-    //mono = createFont("OpenSans-Regular.ttf", 12);
-
-    //textFont(mono);
-
-    //background(240);
-    //PImage ipca;
-    //ipca = loadImage("ipca-logo-web.jpg");
-    //ipca.resize(400,225);
-    //image(ipca, 500, 160);
-    ////Pais p = paises.get(paiseSeleccionado);
-
-    //textSize(12);
-    //fill(50);
-    //textFont(semiBoldItalic);
-    //text("Informação do trabalho", 70, 160);
-    //text(pais.nome, 70, 184);
-    //textFont(lightItalic);
-    //text("Desenho Interfaces Aplicacionais", 500, 510);
-    //text("MEI (Pós-Laboral), DIA", 500, 530);
-    //text("Trabalho elaborado por:", 500, 550);
-    //text("Fernando Correia Nº a11199", 500, 570);
+    
     break;
 
   case 4:
@@ -460,7 +305,6 @@ public void draw() {
 
 
 
-    // salario pais selecionado
     float q = map(countrySexFem.primaryFemaleValue, 0, maximoF, 0, width-400);
 
     fill(13, 39, 255, 200);
@@ -468,14 +312,12 @@ public void draw() {
     fill(255);
     text(countrySexFem.primaryFemaleValue, 280, 295);
 
-    // salario medio
     float r = map(countrySexFem.secondaryFemaleValue, 0, maximoF, 0, width-400);
     fill(12, 94, 232, 150);
     rect(280, 380, r, 20, 12);
     fill(255);
     text(countrySexFem.secondaryFemaleValue, 280, 395);
 
-    // salario mais alto
     float s = map(countrySexFem.tertiaryFemaleValue, 0, maximoF, 0, width-400);
     fill(0, 162, 255, 100);
     rect(280, 480, s, 20, 12);
@@ -535,7 +377,6 @@ public void draw() {
 
 
 
-    // salario pais selecionado
     float qg = map(generalCountry.primaryMaleValue, 0, width, 0, width);
 
     fill(318, 36, 15, 200);
@@ -543,14 +384,12 @@ public void draw() {
     fill(255);
     text(generalCountry.primaryMaleValue, 1190, 295);
 
-    // salario medio
     float rg = map(generalCountry.secondaryMaleValue, 0, width, 0, width);
     fill(331, 67, 25, 150);
     rect(1250, 380, -rg, 20, 12);
     fill(255);
     text(generalCountry.secondaryMaleValue, 1190, 395);
 
-    // salario mais alto
     float sg = map(generalCountry.tertiaryMaleValue, 0, width, 0, width);
     fill(343, 81, 45, 100);
     rect(1250, 480, -sg, 20, 12);
@@ -586,11 +425,7 @@ public void draw() {
     text(generalCountry.secondaryFemale, 200, 860);
     fill(40, 50, 60, 200);
     text(generalCountry.tertiaryFemale, 200, 910);
-    /*
-     
-     
-     
-     //*/
+
     break;
 
   case 6:
@@ -622,10 +457,6 @@ public void draw() {
 
 
     somatorioValorFemale = statisticCountry.primaryFemaleValue + statisticCountry.secondaryFemaleValue + statisticCountry.tertiaryFemaleValue;
-    //float distanciaMedia = dist(250, height/4+200, mouseX, mouseY);
-    //float distanciaMaior = dist(300, height/4+200, mouseX, mouseY);
-    //float distanciaMenor = dist(350, height/4+200, mouseX, mouseY);
-    //float distanciaSomatorio = dist(400, height/4+200, mouseX, mouseY);
 
 
     stroke(0, 80);
@@ -640,7 +471,6 @@ public void draw() {
     fill(40, 50, 60, 200);
     text("Male", 350, 859);
 
-
     fill(0, 56, 64);
     rect(1000, 800, 20, -mediaFemale, 12);
     fill(0, 90, 91);
@@ -651,7 +481,6 @@ public void draw() {
     rect(1150, 800, 20, -somatorioValorFemale, 12);
     fill(40, 50, 60, 200);
     text("Female", 1100, 859);
-
 
     fill(100);
     text("Media: " + mediaMale, 20, 200);      
@@ -683,12 +512,7 @@ public void draw() {
     text("Maior Valor", 680, 965);
     text("Menor Valor", 930, 965);
     text("Somatório", 1180, 965);
-    /*
-    //Pais paisA = paises.get(paiseSeleccionado);
-     
-     
-     
-     background(240);
+
      */
     break;
 
@@ -787,8 +611,6 @@ public void draw() {
     image(countrySummaryMale.iconBandeira, width/2+80, 150);
     text("Sumário", width/2, 200);
     textSize(12);
-    
-    
                     
     myTextareaMale = cp5.addTextarea("txt")
       .setPosition(width/2, 500)
@@ -880,7 +702,7 @@ void buttonClick() {
   dataVertical.update();
   if (dataFilter.clicked) seccaogeral = 8;
   dataFilter.update();
-  if (exit.clicked) seccaogeral = 9;
+  if (exit.clicked) seccaogeral = 10;
   exit.update();
 }
 
